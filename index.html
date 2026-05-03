@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CertiBrain | Smart Certificate Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-brain"></i>
+            <span>CertiBrain</span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><i class="fa-solid fa-border-all"></i> Dashboard</li>
+            <li><i class="fa-solid fa-folder-open"></i> Education</li>
+            <li><i class="fa-solid fa-briefcase"></i> Career</li>
+            <li><i class="fa-solid fa-id-card"></i> Identity</li>
+            <li><a href="#" style="color: inherit; text-decoration: none;" id="nav-expiring"><i
+                        class="fa-solid fa-bell"></i> Expiring Soon <span class="badge">2</span></a></li>
+            <li><i class="fa-solid fa-chart-line"></i> Career Readiness</li>
+        </ul>
+        <div class="user-profile">
+            <img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="User">
+            <div>
+                <h4>Sarahu Profile</p>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <header class="topbar">
+            <div class="search-bar">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" placeholder="Search certificates by name, year, or ID...">
+            </div>
+            <button class="upload-btn" id="uploadBtn">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload Document
+            </button>
+        </header>
+
+        <!-- Stats Overview -->
+        <section class="stats-overview">
+            <div class="stat-card glass-panel" onclick="filterCertificates('all')">
+                <div class="icon-wrapper total"><i class="fa-solid fa-file-contract"></i></div>
+                <div class="stat-info">
+                    <h3>Total Scanned</h3>
+                    <h2 id="total-count">24</h2>
+                </div>
+            </div>
+            <div class="stat-card glass-panel" onclick="filterCertificates('verified')">
+                <div class="icon-wrapper verified"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-info">
+                    <h3>Verified</h3>
+                    <h2 id="verified-count">18</h2>
+                    <p class="trust-tooltip">Officially recognized patterns <i class="fa-solid fa-circle-info"></i></p>
+                </div>
+            </div>
+            <div class="stat-card glass-panel" onclick="filterCertificates('semi')">
+                <div class="icon-wrapper semi"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="stat-info">
+                    <h3>Semi-Verified</h3>
+                    <h2 id="semi-count">4</h2>
+                    <p class="trust-tooltip">Valid issuer, lacks signature <i class="fa-solid fa-circle-info"></i></p>
+                </div>
+            </div>
+            <div class="stat-card glass-panel" onclick="filterCertificates('unverified')">
+                <div class="icon-wrapper unverified"><i class="fa-solid fa-circle-exclamation"></i></div>
+                <div class="stat-info">
+                    <h3>Unverified</h3>
+                    <h2 id="unverified-count">2</h2>
+                    <p class="trust-tooltip">User uploaded, requires checking <i class="fa-solid fa-circle-info"></i>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Certificates View -->
+        <section class="certificates-section">
+            <div class="section-header">
+                <h2>Recent Intelligence <span class="ai-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI
+                        Organized</span></h2>
+                <div class="view-toggles">
+                    <button class="active"><i class="fa-solid fa-grid-2"></i></button>
+                    <button><i class="fa-solid fa-list"></i></button>
+                </div>
+            </div>
+
+            <div class="certificates-grid" id="cert-grid">
+                <!-- Javascript will populate certificates here -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Upload Modal / AI Processing Overlay -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-content glass-panel pulse-glow">
+            <div class="close-modal" id="closeModal"><i class="fa-solid fa-xmark"></i></div>
+            <h2>Smart AI Upload</h2>
+            <p>Drag & Drop your certificate. Our AI will do the rest.</p>
+
+            <div class="upload-area" id="uploadArea">
+                <i class="fa-solid fa-file-arrow-up upload-icon"></i>
+                <p>Browse Files or Drag & Drop</p>
+                <span class="file-hint">Supports PDF, JPG, PNG. Max 5MB.</span>
+            </div>
+
+            <!-- Processing State (Hidden by default) -->
+            <div class="processing-state" id="processingState" style="display: none;">
+                <div class="scanning-bar"></div>
+                <h3 class="scanning-text">AI Extracting Metadata...</h3>
+                <ul class="ai-steps">
+                    <li><i class="fa-solid fa-check" style="color: #4CAF50"></i> Identifying Document Class</li>
+                    <li class="active-step"><i class="fa-solid fa-spinner fa-spin"></i> Reading Expiry Dates</li>
+                    <li style="opacity: 0.5"><i class="fa-regular fa-circle"></i> Assigning Trust Score</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Certificate Detail Modal -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content detail-view glass-panel">
+            <div class="close-modal" id="closeDetail"><i class="fa-solid fa-xmark"></i></div>
+
+            <div class="cert-detail-layout">
+                <!-- Preview Side -->
+                <div class="cert-preview">
+                    <!-- Placeholder visual for the doc -->
+                    <div class="doc-visual">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h4 id="detail-title-visual">Document</h4>
+                        <p id="detail-issuer-visual">Issuer</p>
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="cert-info-panel">
+                    <h2 id="detail-title">Bachelor of Science in CS</h2>
+                    <div class="trust-badge" id="detail-trust">
+                        <i class="fa-solid fa-circle-check"></i> Verified
+                    </div>
+                    <p class="trust-explanation" id="detail-explanation">
+                        The AI determined this is a Verified document because its layout perfectly matches the official
+                        University format.
+                    </p>
+
+                    <div class="meta-grid">
+                        <div class="meta-item">
+                            <label>Issuer</label>
+                            <span id="detail-issuer">Stanford University</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Year</label>
+                            <span id="detail-year">2023</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Category</label>
+                            <span id="detail-category">Education » Degree</span>
+                        </div>
+                        <div class="meta-item">
+                            <label>Expiry</label>
+                            <span id="detail-expiry" class="safe">Lifetime</span>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="primary"><i class="fa-solid fa-share-nodes"></i> Secure Share (48h)</button>
+                        <button class="secondary"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                        <button class="danger"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Add Certificate API</title>
+</head>
+<body>
+    <h2>Test POST /certificates API</h2>
+    <button id="addCertBtn">Add Certificate</button>
+
+    <script>
+        document.getElementById('addCertBtn').addEventListener('click', async () => {
+            const payload = {
+                user_id: 1,
+                title: "Test Certificate",
+                file_url: "http://example.com/test.pdf",
+                expiry_date: "2026-12-31"
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:5005/certificates', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    alert('Success');
+                } else {
+                    alert('Error');
+                    console.error("Server responded with: " + response.status);
+                }
+            } catch (error) {
+                alert('Error');
+                console.error("Fetch error: ", error);
+            }
+        });
+    </script>
+</body>
+</html>

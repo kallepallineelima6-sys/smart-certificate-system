@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Certificate Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #e2e8f0;
+            --radius-lg: 1.25rem;
+            --radius-md: 0.75rem;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%),
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.05) 0%, transparent 20%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+            animation: slideDown 0.6s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-text h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .welcome-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1.8rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: white;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.07);
+        }
+
+        .stat-card h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-main), var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-indicator {
+            width: 40px;
+            height: 4px;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .total-indicator {
+            background: var(--primary);
+        }
+
+        .expired-indicator {
+            background: var(--danger);
+        }
+
+        .soon-indicator {
+            background: var(--warning);
+        }
+
+        .no-exp-indicator {
+            background: var(--text-muted);
+        }
+
+        /* Actions & Filters */
+        .no-print {
+            display: flex;
+        }
+
+        /* Emergency Mode Styles */
+        .btn-emergency {
+            background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+            color: white !important;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .emergency-card {
+            background: #fff;
+            border: 2px solid #fee2e2;
+            border-radius: 1.25rem;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-card::before {
+            content: 'EMERGENCY';
+            position: absolute;
+            top: 10px;
+            right: -25px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 2px 30px;
+            transform: rotate(45deg);
+        }
+
+        .emergency-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #1e293b;
+        }
+
+        .emergency-card .type-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #ef4444;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.5rem;
+            border-radius: 100px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        }
+
+        .filter-btn:hover:not(.active) {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+
+        .ai-resume-btn {
+            background: linear-gradient(135deg, #8b5cf6, #d946ef);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 100px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s;
+        }
+
+        .ai-resume-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 20px -3px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Certificate Cards Grid */
+        .certs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .cert-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .cert-card:hover {
+            transform: scale(1.03);
+            border-color: var(--primary-light);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .cert-preview-icon {
+            width: 50px;
+            height: 50px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .cert-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 0.25rem;
+            display: block;
+        }
+
+        .cert-category.education {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .cert-category.skills {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .cert-category.government {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.3rem 0.8rem;
+            border-radius: 100px;
+        }
+
+        .status-valid {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-expired {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .status-none {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .trust-badge {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .trust-verified {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .trust-semi {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .trust-unverified {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .cert-details {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .cert-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-view {
+            background: #6366f1;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        .btn-edit {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid var(--border);
+        }
+
+        .btn-edit:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .btn-delete {
+            background: #fff1f2;
+            color: #ef4444;
+        }
+
+        .btn-delete:hover {
+            background: #ffe4e6;
+            transform: translateY(-2px);
+        }
+
+        /* Resume Specific Styles */
+        .resume-paper {
+            background: white;
+            padding: 3rem;
+            border-radius: 4px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            margin: 2rem auto;
+            border: 1px solid #eee;
+        }
+
+        .resume-header {
+            border-bottom: 2px solid #333;
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .resume-header h1 {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resume-section {
+            margin-bottom: 2rem;
+        }
+
+        .resume-section h2 {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .resume-content {
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .resume-skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            list-style: none;
+        }
+
+        .resume-skill-item {
+            background: #f1f5f9;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: #f1f5f9;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: #e2e8f0;
+            color: var(--text-main);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .preview-container {
+            width: 100%;
+            height: 500px;
+            background: #f1f5f9;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .preview-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .preview-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Notification bar */
+        #notification-bar {
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Dashboard Header -->
+        <header class="dashboard-header">
+            <div class="welcome-text">
+                <h1>Certificate Dashboard</h1>
+                <p>Hello, <span id="usernameDisplay" style="font-weight: 700; color: var(--text-main);">User</span>!
+                    Managing your credentials made easy.</p>
+            </div>
+            <div class="header-actions">
+                <button onclick="generateAIResume()" class="ai-resume-btn">
+                    <span>✨</span> Generate AI Resume
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <section class="stats-grid">
+            <div class="stat-card" onclick="filterCategory('all')">
+                <h3>Total Documents</h3>
+                <div class="value" id="stat-total">0</div>
+                <div class="stat-indicator total-indicator"></div>
+            </div>
+            <div class="stat-card" onclick="filterByStatus('expired')">
+                <h3>Expired</h3>
+                <div class="value" id="stat-expired">0</div>
+                <div class="stat-indicator expired-indicator"></div>
+            </div>
+            <div class="stat-card" onclick="filterByStatus('expiring')">
+                <h3>Expiring Soon</h3>
+                <div class="value" id="stat-soon">0</div>
+                <div class="stat-indicator soon-indicator"></div>
+            </div>
+            <div class="stat-card" onclick="filterCategory('none')">
+                <h3>No Expiry Set</h3>
+                <div class="value" id="stat-no-exp">0</div>
+                <div class="stat-indicator no-exp-indicator"></div>
+            </div>
+        </section>
+
+        <!-- Controls -->
+        <section class="controls">
+            <div class="filter-group">
+                <button class="filter-btn active" onclick="setFilter('all')" id="btn-all">All</button>
+                <button class="filter-btn" onclick="setFilter('education')" id="btn-education">Education</button>
+                <button class="filter-btn" onclick="setFilter('government')" id="btn-government">Government</button>
+                <button class="filter-btn" onclick="setFilter('skills')" id="btn-skills">Skills</button>
+                <button class="btn btn-emergency" onclick="openEmergencyAccess()"
+                    style="margin-left: 10px; padding: 0 1.2rem; border-radius: 100px;">🚑 Emergency Access</button>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <input type="text" id="searchInput" placeholder="Search certificates..."
+                    style="margin-bottom: 0; width: 250px;">
+                <a href="test_upload.html" class="btn btn-view"
+                    style="display: flex; align-items: center; padding: 0 1.5rem;">+ Upload New</a>
+            </div>
+        </section>
+
+        <div id="notification-bar"></div>
+
+        <div id="status-message" class="status-message">Loading certificates...</div>
+
+        <!-- Certificates Grid -->
+        <div id="certsGrid" class="certs-grid"></div>
+    </div>
+
+    <!-- View Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="viewModalTitle">Certificate Preview</h2>
+                <button class="close-modal" onclick="closeModal('viewModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container" id="previewContainer">
+                    <!-- Image or PDF will be injected here -->
+                </div>
+                <div style="margin-top: 1.5rem;" id="viewModalDetails">
+                    <!-- Details will be injected here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-edit" onclick="closeModal('viewModal')">Close</button>
+                <a id="downloadBtn" href="#" target="_blank" class="btn btn-view">Download File</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2>Edit Certificate</h2>
+                <button class="close-modal" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editCertId">
+                    <div class="form-group">
+                        <label for="editTitle">Certificate Title</label>
+                        <input type="text" id="editTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editCategory">Category</label>
+                        <select id="editCategory">
+                            <option value="education">Education</option>
+                            <option value="government">Government</option>
+                            <option value="skills">Skills</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editExpiry">Expiry Date</label>
+                        <input type="date" id="editExpiry">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-edit" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn btn-view" onclick="submitEdit()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 style="color: var(--danger);">Confirm Delete</h2>
+                <button class="close-modal" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this certificate? This action cannot be undone.</p>
+                <p id="deleteCertName" style="margin-top: 1rem; font-weight: 700;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-edit" onclick="closeModal('deleteModal')">Cancel</button>
+                <button class="btn btn-delete" id="confirmDeleteBtn">Delete Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="resumeModal" class="modal">
+        <div class="resume-paper">
+            <div class="resume-header">
+                <h1 id="resumeName">John Doe</h1>
+                <p id="resumeEmail">john.doe@example.com</p>
+            </div>
+
+            <div class="resume-section">
+                <h2>Profile</h2>
+                <p class="resume-content">A motivated individual with practical knowledge in the certified skill areas.
+                    Demonstrates dedication to learning and applying technical concepts through real certifications.</p>
+            </div>
+
+            <div class="resume-section">
+                <h2>Technical Skills</h2>
+                <div id="resumeSkills" class="resume-skills-list">
+                    <!-- Skills will be injected here -->
+                </div>
+            </div>
+
+            <div class="resume-section">
+                <h2>Certifications</h2>
+                <div id="resumeCerts" class="resume-content">
+                    <!-- Certs will be injected here -->
+                </div>
+            </div>
+
+            <div class="resume-section">
+                <h2>Project</h2>
+                <div class="resume-content">
+                    <strong>Smart Certificate System</strong><br>
+                    Developed a system to manage and verify certificates using automation.
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 3rem;" class="no-print">
+                <button class="btn btn-view" onclick="window.print()">Download PDF</button>
+                <button class="btn btn-edit" onclick="closeModal('resumeModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Access Modal -->
+    <div id="emergencyModal" class="modal">
+        <div class="modal-content" style="max-width: 900px; background: #fff5f5;">
+            <div class="modal-header">
+                <div>
+                    <h2 style="color: #b91c1c; display: flex; align-items: center; gap: 10px;">
+                        🚑 Emergency Document Access
+                    </h2>
+                    <p style="color: #7f1d1d; font-size: 0.9rem; margin-top: 5px;">Quick access to your most important
+                        identification and educational records.</p>
+                </div>
+                <button class="close-modal" onclick="closeModal('emergencyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="emergencyGrid" class="emergency-grid">
+                    <!-- Emergency documents will be injected here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-edit" onclick="closeModal('emergencyModal')">Close Emergency Mode</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Redirect if not logged in
+        if (!localStorage.getItem("token")) {
+            window.location.href = "login.html";
+        }
+
+        let allCertificates = [];
+        const API_URL = 'http://127.0.0.1:5005/certificates';
+        const STATS_URL = 'http://127.0.0.1:5005/stats';
+
+        // Display actual username from localStorage (requested logic)
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user && user.username) {
+            document.getElementById("usernameDisplay").innerText = user.username;
+        } else if (localStorage.getItem("username")) {
+            document.getElementById("usernameDisplay").innerText = localStorage.getItem("username");
+        } else {
+            document.getElementById("usernameDisplay").innerText = "User";
+        }
+
+        async function loadStats() {
+            try {
+                const res = await fetch(STATS_URL, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                const data = await res.json();
+                document.getElementById('stat-total').textContent = data.total;
+                document.getElementById('stat-expired').textContent = data.expired;
+                document.getElementById('stat-soon').textContent = data.expiringSoon;
+                document.getElementById('stat-no-exp').textContent = data.noExpiry;
+            } catch (err) {
+                console.error("Stats fail:", err);
+            }
+        }
+
+        async function loadCertificates() {
+            await loadStats(); // Await stats to ensure token validity is checked first
+            const statusMessage = document.getElementById('status-message');
+            const certsGrid = document.getElementById('certsGrid');
+            const noteBar = document.getElementById('notification-bar');
+
+            try {
+                const response = await fetch(API_URL, {
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (response.status === 401 || response.status === 403) {
+                    localStorage.removeItem("token");
+                    window.location.href = "login.html";
+                    return;
+                }
+                if (!response.ok) throw new Error('Fetch failed with status ' + response.status);
+
+                const data = await response.json();
+
+                // Initialize categories if missing (Fallback logic)
+                data.forEach(cert => {
+                    if (!cert.category) {
+                        let title = (cert.title || "").toLowerCase();
+                        if (title.includes("pan") || title.includes("aadhaar") || title.includes("government")) {
+                            cert.category = "government";
+                        } else if (title.includes("degree") || title.includes("btech") || title.includes("college") || title.includes("university")) {
+                            cert.category = "education";
+                        } else {
+                            cert.category = "skills";
+                        }
+                    }
+                });
+
+                allCertificates = data;
+
+                statusMessage.style.display = "none";
+
+                if (data.length === 0) {
+                    certsGrid.innerHTML = "";
+                    statusMessage.textContent = "No certificates found in database.";
+                    statusMessage.style.display = "block";
+                    noteBar.style.display = 'none';
+                    return;
+                }
+
+                updateNotificationBar(data);
+                renderCertificates(data);
+
+            } catch (error) {
+                console.error("Dashboard Error:", error);
+                statusMessage.textContent = "Connection Error: " + error.message;
+                statusMessage.classList.add("error-message");
+                statusMessage.style.display = "block";
+                noteBar.style.display = 'none';
+            }
+        }
+
+        function renderCertificates(dataOverride = null) {
+            const certsGrid = document.getElementById('certsGrid');
+            certsGrid.innerHTML = "";
+            const today = new Date();
+
+            // Use override data (for search or status filtering) or global state with category filter
+            let certificatesToRender = dataOverride || allCertificates;
+
+            if (!dataOverride && selectedCategory !== "all") {
+                certificatesToRender = allCertificates.filter(cert =>
+                    (cert.category || "").toLowerCase() === selectedCategory.toLowerCase()
+                );
+            }
+
+            certificatesToRender.forEach(cert => {
+                const certCard = document.createElement('div');
+                certCard.className = 'cert-card';
+
+                let statusText = "No Expiry";
+                let statusClass = "status-none";
+
+                if (cert.expiry_date) {
+                    const expiry = new Date(cert.expiry_date);
+                    const diffTime = expiry - today;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays < 0) {
+                        statusText = "Expired";
+                        statusClass = "status-expired";
+                    } else if (diffDays <= 7) {
+                        statusText = "Expiring Soon";
+                        statusClass = "status-warning";
+                    } else {
+                        statusText = "Valid";
+                        statusClass = "status-valid";
+                    }
+                }
+
+                const category = (cert.category || cert.Category || "Skills").toLowerCase();
+                const displayDate = cert.expiry_date ? new Date(cert.expiry_date).toLocaleDateString() : "Lifetime Validity";
+                // Robust file URL replacement to handle port migrations
+                const fileUrl = (cert.file_url || "").replace(':3000', ':5005').replace(':5001', ':5005').replace(':5002', ':5005');
+
+                const isPdf = fileUrl.toLowerCase().endsWith('.pdf');
+                const previewIcon = isPdf ? '📄' : '🖼️';
+
+                const trust = getTrustStatus(cert);
+
+                certCard.innerHTML = `
+                    <div class="cert-preview-icon">${previewIcon}</div>
+                    <div class="cert-header">
+                        <span class="cert-category ${category}">${category}</span>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                    </div>
+                    <div>
+                        <span class="cert-title">${cert.title}</span>
+                        <span class="trust-badge ${trust.class}">${trust.icon} ${trust.text}</span>
+                    </div>
+                    <div class="cert-details">
+                        <div class="detail-item">📅 Expiry: ${displayDate}</div>
+                        <div class="detail-item">🆔 ID: #${cert.id}</div>
+                    </div>
+                    <div class="cert-footer">
+                        <button onclick="openViewModal(${cert.id})" class="btn btn-view">👁 View</button>
+                        <button onclick="openEditModal(${cert.id})" class="btn btn-edit">✏ Edit</button>
+                        <button onclick="openDeleteModal(${cert.id})" class="btn btn-delete">🗑 Delete</button>
+                    </div>
+                `;
+                certsGrid.appendChild(certCard);
+            });
+        }
+
+        function updateNotificationBar(data) {
+            const noteBar = document.getElementById('notification-bar');
+            let expiredCount = 0;
+            let expiringSoonCount = 0;
+            const today = new Date();
+
+            data.forEach(cert => {
+                if (cert.expiry_date) {
+                    const expiry = new Date(cert.expiry_date);
+                    const diffDays = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+                    if (diffDays < 0) expiredCount++;
+                    else if (diffDays <= 7) expiringSoonCount++;
+                }
+            });
+
+            if (expiredCount > 0) {
+                noteBar.textContent = `⚠️ You have ${expiredCount} expired documents!`;
+                noteBar.style.background = "#fee2e2";
+                noteBar.style.color = "#b91c1c";
+                noteBar.style.display = 'block';
+            } else if (expiringSoonCount > 0) {
+                noteBar.textContent = `⏳ ${expiringSoonCount} documents are expiring within a week.`;
+                noteBar.style.background = "#fef3c7";
+                noteBar.style.color = "#b45309";
+                noteBar.style.display = 'block';
+            } else {
+                noteBar.style.display = 'none';
+            }
+        }
+
+        function filterCategory(type) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${type}`).classList.add('active');
+
+            if (type === 'all') {
+                renderCertificates(allCertificates);
+            } else {
+                const filtered = allCertificates.filter(c => {
+                    let cat = (c.category || c.Category || "").toLowerCase();
+                    // Fallback guess
+                    if (!cat) {
+                        const title = c.title.toLowerCase();
+                        if (title.includes("python") || title.includes("skill")) cat = "skills";
+                        else if (title.includes("aadhaar") || title.includes("card")) cat = "government";
+                        else cat = "education";
+                    }
+                    return cat === type;
+                });
+                renderCertificates(filtered);
+            }
+        }
+
+        // Modal Logic
+        function openViewModal(id) {
+            const cert = allCertificates.find(c => c.id === id);
+            if (!cert) return;
+
+            const modal = document.getElementById('viewModal');
+            const title = document.getElementById('viewModalTitle');
+            const container = document.getElementById('previewContainer');
+            const details = document.getElementById('viewModalDetails');
+            const downloadBtn = document.getElementById('downloadBtn');
+
+            title.innerText = cert.title;
+            const url = cert.file_url.replace(':5001', ':5005').replace(':5002', ':5005');
+
+            if (url.toLowerCase().endsWith('.pdf')) {
+                container.innerHTML = `<iframe src="${url}"></iframe>`;
+            } else {
+                container.innerHTML = `<img src="${url}" alt="${cert.title}">`;
+            }
+
+            details.innerHTML = `
+                <div class="cert-details">
+                    <div class="detail-item"><strong>Category:</strong> ${cert.category || 'Skills'}</div>
+                    <div class="detail-item"><strong>Expiry:</strong> ${cert.expiry_date ? new Date(cert.expiry_date).toDateString() : 'N/A'}</div>
+                </div>
+            `;
+            downloadBtn.href = url;
+
+            modal.classList.add('active');
+        }
+
+        function openEditModal(id) {
+            const cert = allCertificates.find(c => c.id === id);
+            if (!cert) return;
+
+            document.getElementById('editCertId').value = cert.id;
+            document.getElementById('editTitle').value = cert.title;
+            document.getElementById('editCategory').value = (cert.category || 'skills').toLowerCase();
+            document.getElementById('editExpiry').value = cert.expiry_date ? cert.expiry_date.split('T')[0] : "";
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        async function submitEdit() {
+            const id = document.getElementById('editCertId').value;
+            const title = document.getElementById('editTitle').value;
+            const category = document.getElementById('editCategory').value;
+            const expiry = document.getElementById('editExpiry').value;
+
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + localStorage.getItem("token")
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        category: category,
+                        expiry_date: expiry === "" ? null : expiry
+                    })
+                });
+
+                if (res.ok) {
+                    closeModal('editModal');
+                    loadCertificates();
+                } else {
+                    alert("Update failed.");
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        function openDeleteModal(id) {
+            const cert = allCertificates.find(c => c.id === id);
+            if (!cert) return;
+
+            document.getElementById('deleteCertName').innerText = cert.title;
+            document.getElementById('confirmDeleteBtn').onclick = () => confirmDelete(id);
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        async function confirmDelete(id) {
+            try {
+                const res = await fetch(`${API_URL}/${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": "Bearer " + localStorage.getItem("token") }
+                });
+                if (res.ok) {
+                    closeModal('deleteModal');
+                    loadCertificates();
+                } else {
+                    alert("Delete failed.");
+                }
+            } catch (err) {
+                alert("Error: " + err.message);
+            }
+        }
+
+        function getTrustStatus(cert) {
+            const title = ((cert.title || "") + "").toLowerCase();
+            const text = ((cert.ocr_text || cert.extractedText || cert.ocrData || cert.text || "") + "").toLowerCase();
+
+            // 1. GOVERNMENT (TITLE BASED)
+            if (
+                title.includes("pan") ||
+                title.includes("aadhaar") ||
+                title.includes("aadhar") ||
+                title.includes("passport") ||
+                title.includes("voter") ||
+                title.includes("driving license")
+            ) {
+                return { text: "Verified", class: "trust-verified", icon: "🟢" };
+            }
+
+            // 2. GOVERNMENT (OCR BASED)
+            if (
+                text.includes("government of india") ||
+                text.includes("income tax department") ||
+                text.includes("uidai") ||
+                text.includes("permanent account number")
+            ) {
+                return { text: "Verified", class: "trust-verified", icon: "🟢" };
+            }
+
+            // 3. SKILL CERTIFICATES (STRICT)
+            if (
+                title.includes("skill") ||
+                title.includes("python") ||
+                title.includes("java") ||
+                title.includes("course") ||
+                title.includes("training")
+            ) {
+                return { text: "Verified", class: "trust-verified", icon: "🟢" };
+            }
+
+            // 4. SOME OCR AVAILABLE → Semi Verified
+            if (text && text.length > 30) {
+                return { text: "Semi Verified", class: "trust-semi", icon: "🟡" };
+            }
+
+            // 5. DEFAULT
+            return { text: "Unverified", class: "trust-unverified", icon: "🔴" };
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        let selectedCategory = "all";
+
+        function setFilter(category) {
+            selectedCategory = category;
+
+            // Update UI active state
+            const btns = document.querySelectorAll('.filter-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            if (document.getElementById('btn-' + category)) document.getElementById('btn-' + category).classList.add('active');
+
+            renderCertificates();
+        }
+
+        function filterByStatus(status) {
+            const today = new Date();
+            let filtered = [];
+            if (status === 'expired') {
+                filtered = allCertificates.filter(c => c.expiry_date && new Date(c.expiry_date) < today);
+            } else if (status === 'expiring') {
+                filtered = allCertificates.filter(c => {
+                    if (!c.expiry_date) return false;
+                    const diffDays = Math.ceil((new Date(c.expiry_date) - today) / (1000 * 60 * 60 * 24));
+                    return diffDays >= 0 && diffDays <= 7;
+                });
+            } else if (status === 'all') {
+                filtered = allCertificates;
+            }
+            renderCertificates(filtered);
+        }
+
+        // Search logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = allCertificates.filter(c =>
+                c.title.toLowerCase().includes(query) ||
+                (c.category || "").toLowerCase().includes(query)
+            );
+            renderCertificates(filtered);
+        });
+
+        // AI Resume Generator - Modern Modal Version
+        async function generateAIResume() {
+            if (allCertificates.length === 0) {
+                alert("No certificates found! Please upload some documents first.");
+                return;
+            }
+
+            const modal = document.getElementById('resumeModal');
+            const nameEl = document.getElementById('resumeName');
+            const emailEl = document.getElementById('resumeEmail');
+            const skillsEl = document.getElementById('resumeSkills');
+            const certsEl = document.getElementById('resumeCerts');
+
+            // Set user info
+            const username = localStorage.getItem("username") || "User";
+            nameEl.innerText = username.toUpperCase();
+            emailEl.innerText = username.toLowerCase() + "@example.com";
+
+            // Extract skills only from Skill category certificates
+            let skills = [];
+            let certifications = [];
+
+            allCertificates.forEach(cert => {
+                if ((cert.category || "").toLowerCase() === "skills") {
+                    certifications.push(cert.title);
+
+                    // Clean skill name (Remove "Certificate", "Course", etc.)
+                    let skill = cert.title
+                        .replace(/certificate|course|completion|of|achievement|award/gi, "")
+                        .trim();
+
+                    if (skill) skills.push(skill);
+                }
+            });
+
+            const uniqueSkills = [...new Set(skills)];
+
+            skillsEl.innerHTML = uniqueSkills.map(skill => `<li class="resume-skill-item">${skill} (Certified)</li>`).join('');
+
+            // Set certifications list
+            certsEl.innerHTML = `<ul style="list-style-type: disc; padding-left: 1.5rem;">${certifications.map(c => `<li>${c}</li>`).join('')}</ul>`;
+
+            modal.classList.add('active');
+        }
+
+        // Emergency Access Logic
+        function openEmergencyAccess() {
+            const emergencyKeywords = [
+                "aadhaar", "aadhar", "pan", "permanent account number",
+                "passport", "driving license", "government of india",
+                "university", "degree", "board", "marksheet", "10th", "12th"
+            ];
+
+            const emergencyCerts = allCertificates.filter(cert => {
+                const title = (cert.title || "").toLowerCase();
+                const text = (cert.ocr_text || cert.extractedText || cert.ocrData || "").toLowerCase();
+
+                return emergencyKeywords.some(key => title.includes(key) || text.includes(key));
+            });
+
+            const grid = document.getElementById('emergencyGrid');
+            grid.innerHTML = "";
+
+            if (emergencyCerts.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: #7f1d1d;">
+                    <h3>No Emergency Documents Found</h3>
+                    <p>We couldn't identify any critical documents. Ensure your Aadhaar, PAN, or Degrees are uploaded with clear titles.</p>
+                </div>`;
+            } else {
+                emergencyCerts.forEach(cert => {
+                    const card = document.createElement('div');
+                    card.className = 'emergency-card';
+
+                    const type = (cert.category || "Document").toUpperCase();
+
+                    card.innerHTML = `
+                        <span class="type-label">${type}</span>
+                        <h4>${cert.title}</h4>
+                        <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                            <button onclick="openViewModal(${cert.id})" class="btn btn-view" style="flex: 1; padding: 0.6rem;">View</button>
+                            <a href="${cert.file_url}" target="_blank" class="btn btn-edit" style="flex: 1; padding: 0.6rem; text-align: center; text-decoration: none;">Download</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            document.getElementById('emergencyModal').classList.add('active');
+        }
+
+        window.onload = loadCertificates;
+
+        // Close modals on clicking outside
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+
+</html>
